@@ -6,6 +6,7 @@ import { Container, TextField, Button, Typography, Paper, Box, Alert } from "@mu
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./login.css";
 import React from "react";
+import Link from "next/link";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -24,7 +25,7 @@ export default function Login() {
       setError("Usuário ou senha inválidos!");
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      router.push("/Dashboard");
     }
   };
 
@@ -102,6 +103,18 @@ export default function Login() {
             >
               Entrar
             </Button>
+            <Link href="/Cadastrar" passHref>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  backgroundColor: "#000",
+                  "&:hover": { backgroundColor: "#999" },
+                }}
+              >
+                Cadastrar-se
+              </Button>
+            </Link>
           </Box>
         </form>
       </Paper>

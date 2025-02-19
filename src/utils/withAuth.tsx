@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 export default function withAuth(Component: React.FC) {
   return async function ProtectedPage() {
     const session = await getServerSession(authOptions);
-
+    
     if (!session) {
       redirect("/login");
     }
