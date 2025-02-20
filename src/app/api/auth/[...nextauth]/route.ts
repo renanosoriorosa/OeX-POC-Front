@@ -34,7 +34,7 @@ export const authOptions : AuthOptions  = {
             id: responseJson.data.userToken.id || responseJson.data.userToken.email, // Pode ser o ID real ou o email como fallback
             email: responseJson.data.userToken.email,
             name: responseJson.data.userToken.email,
-            token: responseJson.data.accessToken,
+            accessToken: responseJson.data.accessToken,
           };
         } catch (error) {
           console.error("Erro ao autenticar:", error);
@@ -46,10 +46,9 @@ export const authOptions : AuthOptions  = {
   callbacks: {
     async jwt({ token, user }: { token: any; user: any }) {
       if (user) {
-        token.accessToken = user.token;
+        token.accessToken = user.accessToken;
         token.id = user.id;
         token.email = user.email;
-        token.tenantId = ''
       }
       return token;
     },
@@ -60,7 +59,7 @@ export const authOptions : AuthOptions  = {
       return session;
     },
   },
-  secret: "sua-chave-secreta",
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
