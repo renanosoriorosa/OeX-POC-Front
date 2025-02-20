@@ -30,11 +30,6 @@ export const authOptions : AuthOptions  = {
             return null;
           }
 
-          console.log(responseJson.success);
-          console.log(responseJson.data.accessToken);
-          console.log(responseJson.data.userToken.id);
-          console.log(responseJson.data.userToken.email);
-
           return {
             id: responseJson.data.userToken.id || responseJson.data.userToken.email, // Pode ser o ID real ou o email como fallback
             email: responseJson.data.userToken.email,
@@ -54,6 +49,7 @@ export const authOptions : AuthOptions  = {
         token.accessToken = user.token;
         token.id = user.id;
         token.email = user.email;
+        token.tenantId = ''
       }
       return token;
     },

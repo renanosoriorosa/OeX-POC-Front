@@ -24,6 +24,9 @@ import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 import { Menu, MenuItem } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 import { signOut } from "next-auth/react";
+import BusinessIcon from '@mui/icons-material/Business';
+import Groups2Icon from '@mui/icons-material/Groups2';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 const drawerWidth = 240;
 
@@ -97,8 +100,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" 
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/Dashboard" },
-  { text: "Manutenções", icon: <BuildIcon />, path: "/MotivoManutencao" },
-  { text: "Paradas", icon: <ReportProblemIcon />, path: "/MotivoParada" },
+  { text: "Motivos Manutenção", icon: <BuildIcon />, path: "/MotivoManutencao" },
+  { text: "Motivos Parada", icon: <ReportProblemIcon />, path: "/MotivoParada" },
+  { text: "Usuários", icon: <Groups2Icon />, path: "/Usuario" },
+  { text: "Empresa", icon: <BusinessIcon />, path: "/Empresa" },
+  { text: "Ordens Produção", icon: <InventoryIcon />, path: "/OrdemProducao" },
 ];
 
 export default function MiniDrawer({ children }
@@ -172,8 +178,7 @@ export default function MiniDrawer({ children }
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>Perfil</MenuItem>
                 <MenuItem onClick={() => signOut({ callbackUrl: "/login" })}>Logout</MenuItem>
               </Menu>
             </div>
