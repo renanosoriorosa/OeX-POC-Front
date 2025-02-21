@@ -1,10 +1,16 @@
-import withAuth from "@/utils/withAuth";
-import { Dashboard } from "@mui/icons-material";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 function Home() {
-  return (
-      <Dashboard/>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/Dashboard");
+  }, []);
+
+  return null; // Retorna nada porque vai redirecionar automaticamente
 }
 
-export default withAuth(Home);
+export default Home;
