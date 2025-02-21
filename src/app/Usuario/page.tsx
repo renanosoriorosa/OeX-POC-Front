@@ -12,39 +12,20 @@ import { Button, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect } from 'react';
+import UsuarioService from '../api/Usuario/UsuarioService';
 
 interface Column {
-  id: 'name' | 'code' | 'population' | 'size' | 'density';
+  id: 'id' | 'nome' | 'email' ;
   label: string;
   minWidth?: number;
-  align?: 'right';
+  align?: string;
   format?: (value: number) => string;
 }
 
 const columns: Column[] = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-  {
-    id: 'population',
-    label: 'Population',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toFixed(2),
-  },
+  { id: 'id', label: 'Id', minWidth: 170 },
+  { id: 'nome', label: 'Nome', minWidth: 100 },
+  { id: 'email', label: 'Email', minWidth: 100 },
 ];
 
 interface Data {
@@ -86,9 +67,10 @@ const rows = [
 
 
 export default function ColumnGroupingTable() {
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [users, setUsers] = React.useState<UsuarioDto[]>([]);
+  
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -102,8 +84,18 @@ export default function ColumnGroupingTable() {
     console.log(name);
   }
 
+  const GetUsersList = async () => {
+    const result = await UsuarioService.GetUsuarios(rowsPerPage, page);
+
+    if(result.success){
+      setUsers(result.data);
+    }else{
+      console.log(result.messages);
+    }
+  }
+
   useEffect(() => {
-  
+    GetUsersList();
   }, []);
   
   return (
@@ -130,7 +122,7 @@ export default function ColumnGroupingTable() {
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
-                    align={column.align}
+                    align='center'
                     style={{ top: 57, minWidth: column.minWidth }}
                   >
                     {column.label}
@@ -146,15 +138,14 @@ export default function ColumnGroupingTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {users
                 .map((row) => {
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell key={column.id} align='center'>
                             {column.format && typeof value === 'number'
                               ? column.format(value)
                               : value}
@@ -164,7 +155,7 @@ export default function ColumnGroupingTable() {
                       <TableCell key='delete' align='center'>
                             <IconButton 
                               color='error'
-                              onClick={() => handleButtonClick(row.name)}>
+                              onClick={() => handleButtonClick(row.nome)}>
                               <DeleteIcon />
                             </IconButton>
                       </TableCell>
