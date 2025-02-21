@@ -1,114 +1,189 @@
-"use client";
-import * as React from "react";
-import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
-import EditIcon from '@mui/icons-material/Edit';
+"use client"
+import * as React from 'react';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import { Button, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button, IconButton } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import { useEffect } from 'react';
 
-const columns: GridColDef[] = [
-  { field: "id", headerName: "ID" },
-  { field: "firstName", headerName: "First name", flex: 1, },
-  { field: "lastName", headerName: "Last name",flex: 1,},
+interface Column {
+  id: 'name' | 'code' | 'population' | 'size' | 'density';
+  label: string;
+  minWidth?: number;
+  align?: 'right';
+  format?: (value: number) => string;
+}
+
+const columns: Column[] = [
+  { id: 'name', label: 'Name', minWidth: 170 },
+  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
   {
-    field: "age",
-    headerName: "Age",
-    type: "number",
-    flex: 1,
+    id: 'population',
+    label: 'Population',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    flex: 1,
-    valueGetter: (value, row) => `${row.firstName || ""} ${row.lastName || ""}`,
+    id: 'size',
+    label: 'Size\u00a0(km\u00b2)',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    field: "edit",
-    headerName: "Editar",
-    width: 150,
-    sortable: false,
-    filterable: false,
-    renderCell: (params) => (
-        <IconButton color="primary" 
-            aria-label="add to shopping cart"
-            onClick={() => handleButtonClick(params.row.id)}>
-            <EditIcon />
-        </IconButton>
-    ),
-  },
-  {
-    field: "delete",
-    headerName: "Deletar",
-    width: 150,
-    sortable: false,
-    filterable: false,
-    renderCell: (params) => (
-        <IconButton color="error" 
-            aria-label="add to shopping cart"
-            onClick={() => handleButtonClick(params.row.id)}>
-            <DeleteIcon />
-        </IconButton>
-    ),
+    id: 'density',
+    label: 'Density',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toFixed(2),
   },
 ];
 
-const handleButtonClick = (row: number) => {
-  console.log("Clicou em:", row);
-};
+interface Data {
+  name: string;
+  code: string;
+  population: number;
+  size: number;
+  density: number;
+}
+
+function createData(
+  name: string,
+  code: string,
+  population: number,
+  size: number,
+): Data {
+  const density = population / size;
+  return { name, code, population, size, density };
+}
 
 const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+  createData('India', 'IN', 1324171354, 3287263),
+  createData('China', 'CN', 1403500365, 9596961),
+  createData('Italy', 'IT', 60483973, 301340),
+  createData('United States', 'US', 327167434, 9833520),
+  createData('Canada', 'CA', 37602103, 9984670),
+  createData('Australia', 'AU', 25475400, 7692024),
+  createData('Germany', 'DE', 83019200, 357578),
+  createData('Ireland', 'IE', 4857000, 70273),
+  createData('Mexico', 'MX', 126577691, 1972550),
+  createData('Japan', 'JP', 126317000, 377973),
+  createData('France', 'FR', 67022000, 640679),
+  createData('United Kingdom', 'GB', 67545757, 242495),
+  createData('Russia', 'RU', 146793744, 17098246),
+  createData('Nigeria', 'NG', 200962417, 923768),
+  createData('Brazil', 'BR', 210147125, 8515767),
 ];
 
-export default function Usuario() {
-    const [paginationModel, setPaginationModel] = React.useState<GridPaginationModel>({
-        page: 0,
-        pageSize: 5,
-      });
-    
-      const handlePaginationChange = (newPagination: GridPaginationModel) => {
-        console.log("Nova página:", newPagination.page);
-        console.log("Novo pageSize:", newPagination.pageSize);
-        setPaginationModel(newPagination);
-      };
 
+
+export default function ColumnGroupingTable() {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const handleButtonClick = (name : string) => {
+    console.log(name);
+  }
+
+  useEffect(() => {
+  
+  }, []);
+  
   return (
     <>
-        <Button 
-             sx={{
-                mb: 2, 
-                color: 'white', 
-                borderColor: 'white', 
-                '&:hover': { 
-                    borderColor: 'white', 
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)' 
-                }
-            }}
-            variant="outlined" 
-            endIcon={<AddIcon />}>
-            Novo Usuário
-        </Button>
-        <Paper sx={{ height: 400, width: "100%" }}>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                initialState={{ pagination: { paginationModel } }}
-                onPaginationModelChange={handlePaginationChange} // Captura evento de troca de página e pageSize
-                pageSizeOptions={[5, 10, 20]}
-                sx={{ border: 0 }}
-            />
-        </Paper>
+      <Button 
+          sx={{
+              mb: 2, 
+              color: 'white', 
+              borderColor: 'white', 
+              '&:hover': { 
+                  borderColor: 'white', 
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)' 
+              }
+          }}
+          variant="outlined" 
+          endIcon={<AddIcon />}>
+          Novo Usuário
+      </Button>
+      <Paper sx={{ width: '100%' }}>
+        <TableContainer>
+          <Table aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ top: 57, minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+                <TableCell
+                    key='delete'
+                    align='center'
+                    style={{ top: 57, }}
+                  >
+                    Deletar
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => {
+                  return (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {column.format && typeof value === 'number'
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        );
+                      })}
+                      <TableCell key='delete' align='center'>
+                            <IconButton 
+                              color='error'
+                              onClick={() => handleButtonClick(row.name)}>
+                              <DeleteIcon />
+                            </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 50]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </>
   );
 }
