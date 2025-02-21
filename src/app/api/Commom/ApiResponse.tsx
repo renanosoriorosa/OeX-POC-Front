@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface ApiResponse<T> {
     success: boolean;
-    data: T;
+    data?: T;
     messages?: string[] | null;
     exception? : ExceptionDetailsResponse | null;
   }
