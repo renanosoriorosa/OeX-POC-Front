@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Container, TextField, Button, Typography, Paper, Box, Alert } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./login.css";
 import React from "react";
 import Link from "next/link";
 
@@ -33,7 +32,7 @@ export default function Login() {
     <Container
       className="d-flex justify-content-center align-items-center min-vh-100"
       sx={{
-        background: "linear-gradient(135deg, #cccc66, #80b380, #339999)",
+        background: "linear-gradient(135deg, #339999)",
         minHeight: "100vh",
       }}
     >
