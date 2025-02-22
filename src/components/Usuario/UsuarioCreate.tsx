@@ -1,7 +1,7 @@
 import UsuarioService from "@/app/api/Usuario/UsuarioService";
 import { Alert, Box, Button, Drawer, TextField, Typography } from "@mui/material";
 import React from "react";
-import ErrorListForm from "./ErrorListForm";
+import ErrorListForm from "../ErrorListForm";
 import Grid from  "@mui/material/Grid2";
 
 interface UsuarioCreateProps {

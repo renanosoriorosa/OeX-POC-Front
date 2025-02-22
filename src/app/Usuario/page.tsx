@@ -8,13 +8,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Box, Button, IconButton } from '@mui/material';
+import { Alert, AlertTitle, Box, Button, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect } from 'react';
 import UsuarioService from '../api/Usuario/UsuarioService';
 import LoaderOverlay from '@/components/LoaderOverlay';
-import UsuarioCreate from '@/components/UsuarioCreate';
+import UsuarioCreate from '@/components/Usuario/UsuarioCreate';
+import UsuarioDelete from '@/components/Usuario/UsuarioDelete';
 
 interface Column {
   id: 'id' | 'nome' | 'email' ;
@@ -38,6 +39,10 @@ export default function ColumnGroupingTable() {
   const [loading, setLoading] = React.useState(false);
   const [openModalCreate, setOpenModalCreate] = React.useState(false);
 
+  const [openModalDelete, setOpenModalDelete] = React.useState(false);
+  const [idUserDelete, setIdUserDelete] = React.useState(String);
+  const [openDeletedSuccess, setOpenDeletedSuccess] = React.useState(false);
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -51,8 +56,14 @@ export default function ColumnGroupingTable() {
     GetUsersList();
   }
 
-  const handleButtonClick = (name : string) => {
-    console.log(name);
+  const handleUserDeleted = () => {
+    setOpenDeletedSuccess(true);
+    setTimeout(() => setOpenDeletedSuccess(false), 5000);
+  }
+
+  const handleDeleteUser = (id : string) => {
+    setIdUserDelete(id);
+    setOpenModalDelete(true);
   }
 
   const toogleModalCreate = (open : boolean) => {
@@ -81,8 +92,20 @@ export default function ColumnGroupingTable() {
     GetUsersList();
   }, [rowsPerPage, page]);
   
+  useEffect(() => {
+    if (openDeletedSuccess) {
+      GetUsersList();
+    }
+  }, [openDeletedSuccess]);
+
   return (
     <>
+      {openDeletedSuccess && (
+        <Alert severity="success" sx={{ mt: 2, marginBottom:'10px' }}>
+          <AlertTitle>Sucesso!</AlertTitle>
+          Item deletado com sucesso
+        </Alert>
+      )}
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <Button 
           onClick={() => toogleModalCreate(true)}
@@ -142,7 +165,7 @@ export default function ColumnGroupingTable() {
                       <TableCell key='delete' align='center'>
                             <IconButton 
                               color='error'
-                              onClick={() => handleButtonClick(row.nome)}>
+                              onClick={() => handleDeleteUser(row.id)}>
                               <DeleteIcon />
                             </IconButton>
                       </TableCell>
@@ -167,6 +190,11 @@ export default function ColumnGroupingTable() {
         open={openModalCreate} 
         setIsOpen={setOpenModalCreate} 
         setCreated={handleUserCreated} />
+      <UsuarioDelete 
+        open={openModalDelete} 
+        setIsOpen={setOpenModalDelete} 
+        setDeleted={handleUserDeleted}
+        id={idUserDelete} />
     </>
   );
 }
