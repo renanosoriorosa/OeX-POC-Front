@@ -62,6 +62,10 @@ export const authOptions : AuthOptions  = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: parseInt(process.env.NEXTAUTH_JWT_MAX_AGE || "600", 10), // 2 horas
+  },
+  jwt: {
+    maxAge: parseInt(process.env.NEXTAUTH_JWT_MAX_AGE || "600", 10), // Garante que o JWT expire em 2 horas
   },
   pages: {
     signIn: "/login",

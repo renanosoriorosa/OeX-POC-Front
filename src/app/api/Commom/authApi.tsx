@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getSession } from "next-auth/react";
-import router from "next/router";
 
 const authApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_AUTH_API || "http://localhost:3000",
@@ -29,11 +28,11 @@ authApi.interceptors.request.use(
 
 authApi.interceptors.response.use(
   (response) => response, 
-  (error) => {
+  async (error) => {
     if (error.response && error.response.status === 401) {
       if (!isRedirecting) {
         isRedirecting = true;
-        router.push("/login"); 
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error);

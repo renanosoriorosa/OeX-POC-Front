@@ -2,6 +2,6 @@
 interface UsuarioCreateRequest {
     nome: string;
     email: string;
-    Password: string;
-    ConfirmPassword: string;
+    password: string;
+    confirmPassword: string;
 }
