@@ -12,7 +12,7 @@ export const authOptions : AuthOptions  = {
       },
       async authorize(credentials) {
         try {
-          const res = await fetch("https://localhost:7121/api/v1/autenticacao/login", {
+          const res = await fetch(process.env.NEXT_PUBLIC_AUTH_API+"api/v1/autenticacao/login", {
             method: "POST",
             headers: { "Content-Type": "application/json; charset=utf-8" },
             body: JSON.stringify({
