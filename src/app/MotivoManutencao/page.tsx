@@ -1,7 +1,8 @@
 import withAuth from "@/utils/withAuth";
+import MotivoManutencaoContent from "./MotivoManutencaoContent";
 
-function MotivoManutencao() {
-  return <h1>MotivoManutencao</h1>;
+export default async function MotivoManutencao() {
+  return withAuth(() => (
+    <MotivoManutencaoContent />
+  ));
 }
-
-export default withAuth(MotivoManutencao);
