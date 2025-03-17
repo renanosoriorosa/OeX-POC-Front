@@ -107,8 +107,8 @@ const menuItems = [
   { text: "Ordens Produção", icon: <InventoryIcon />, path: "/OrdemProducao" },
 ];
 
-export default function MiniDrawer({ children }
-    : { children: React.ReactNode }) {
+export default function MiniDrawer({ children, userName }
+    : { children: React.ReactNode, userName: string }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
@@ -161,6 +161,9 @@ export default function MiniDrawer({ children }
                 onClick={handleMenu}
                 color="inherit"
               >
+              <div style={{fontSize:'20px', marginRight: '10px'}}>
+                  Olá, {userName}
+              </div>
               <AccountCircle />
               </IconButton>
               <Menu

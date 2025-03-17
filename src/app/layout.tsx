@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import MiniDrawer from "@/components/MiniDrawer";
+import SessionProvider from "@/utils/SessionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +25,7 @@ export default function RootLayout({
   return (
     <html>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MiniDrawer>
-          {children}
-        </MiniDrawer>
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
