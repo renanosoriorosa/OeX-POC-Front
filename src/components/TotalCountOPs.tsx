@@ -1,15 +1,14 @@
-import { Dayjs } from 'dayjs';
 import { useEffect } from 'react';
 
 interface TotalCountOPs {
-  date: Dayjs | null;
+  month: string;
   refresh: boolean;
 }
-export default function TotalCountOPs({ date, refresh } : TotalCountOPs) {
+export default function TotalCountOPs({ month, refresh } : TotalCountOPs) {
 
   useEffect(() => {
     if(refresh){
-      console.log(date?.format('DD/MM/YYYY'));
+      console.log(month);
     }
   }, [refresh]); // Sempre que search, recarrega
 

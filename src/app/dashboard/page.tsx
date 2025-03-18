@@ -1,9 +1,5 @@
 'use client'
-import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'dayjs/locale/pt-br';
 import  {Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
@@ -14,11 +10,8 @@ import Grid from '@mui/material/Grid2';
 import TotalCountParadas from '@/components/TotalCountParadas';
 import TotalCountManutencao from '@/components/TotalCountManutencao';
 
-dayjs.locale('pt-br');
-
 function Dashboard() {
-  const [startDate, setStartDate] = React.useState<Dayjs | null>(dayjs());
-  const [endDate, setEndDate] = React.useState<Dayjs | null>(dayjs());
+  const [mes, setMes] = React.useState('');
   const [maquina, setMaquina] = React.useState('');
   const [search, setSearch] = React.useState(false);
   const [maquinas, setMaquinas] = React.useState<SelectFiltroDto[]>([]);
@@ -26,6 +19,14 @@ function Dashboard() {
   const handleSearch = () => {
     // Atualiza o refreshKey para forçar o TotalCount a recarregar
     setSearch(true);
+
+    setTimeout(() => {
+      setSearch(false);
+    }, 1000);
+  };
+
+  const handleChangeMes = (event: SelectChangeEvent) => {
+    setMes(event.target.value);
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -47,52 +48,13 @@ function Dashboard() {
 
   React.useEffect(() => {
       GetMaquinaList();
+      setMes('1');
   }, []);
 
   return (
     <>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DatePicker']}>
-          <DatePicker
-            sx={{input: { color: 'white' }, // Texto preto (pode trocar se quiser outra cor)
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'white', // Cor da borda se quiser customizar
-              },
-              '& .MuiSvgIcon-root': {
-                color: 'white', // Ícone branco
-                transition: 'color 0.3s', // Suavizar a transição
-              },
-              '& .MuiFormLabel-root':{
-                color: 'white', // branco
-                transition: 'color 0.3s',
-              }
-            }}
-            label="Data Início"
-            value={startDate}
-            onChange={(newValue) => setStartDate(newValue)}
-            format="DD/MM/YYYY"
-          />
-          <DatePicker
-            sx={{
-            input: { color: 'white' }, // Texto preto (pode trocar se quiser outra cor)
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'white', // Cor da borda se quiser customizar
-            },
-            '& .MuiSvgIcon-root': {
-              color: 'white', // Ícone branco
-              transition: 'color 0.3s', // Suavizar a transição
-            },
-            '& .MuiFormLabel-root':{
-              color: 'white', // branco
-              transition: 'color 0.3s',
-            },
-          }}
-            label="Data Fim"
-            value={endDate}
-            onChange={(newValue) => setEndDate(newValue)}
-            format="DD/MM/YYYY"
-          />
-          <FormControl 
+      <DemoContainer components={['DatePicker']}>
+        <FormControl 
             sx={{ 
               minWidth: 120,
               color: 'white', // Cor do texto do Select
@@ -115,7 +77,7 @@ function Dashboard() {
               },}}>
             <InputLabel 
               id="demo-simple-select-label">
-                Máquina
+                Mês
             </InputLabel>
             <Select
               sx={{
@@ -129,53 +91,104 @@ function Dashboard() {
               }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={maquina}
-              label="Máquina"
-              onChange={handleChange}
+              value={mes}
+              onChange={handleChangeMes}
+              label="Mês"
             >
-              {maquinas.map((maquina) => (
-                <MenuItem key={maquina.id} value={maquina.id}>
-                  {maquina.value}
-                </MenuItem>
-              ))}
+              <MenuItem key={1} value={1}>Janeiro</MenuItem>
+              <MenuItem key={2} value={2}>Fevereiro</MenuItem>
+              <MenuItem key={3} value={3}>Março</MenuItem>
+              <MenuItem key={4} value={4}>Abril</MenuItem>
+              <MenuItem key={5} value={5}>Maio</MenuItem>
+              <MenuItem key={6} value={6}>Junho</MenuItem>
+              <MenuItem key={7} value={7}>Julho</MenuItem>
+              <MenuItem key={8} value={8}>Agosto</MenuItem>
+              <MenuItem key={9} value={9}>Setembro</MenuItem>
+              <MenuItem key={10} value={10}>Outubro</MenuItem>
+              <MenuItem key={11} value={11}>Novembro</MenuItem>
+              <MenuItem key={12} value={12}>Dezembro</MenuItem>
             </Select>
-          </FormControl>
-          <Button 
+        </FormControl>
+        <FormControl 
+          sx={{ 
+            minWidth: 120,
+            color: 'white', // Cor do texto do Select
+            '& .MuiInputLabel-root': {
+              color: 'white', // Cor do rótulo
+            },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: 'white', // Cor da borda
+              },
+              '&:hover fieldset': {
+                borderColor: 'white', // Cor da borda no hover
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: 'white', // Cor da borda quando focado
+              },
+              '&.Mui-disabled fieldset': {
+                borderColor: 'gray', // Cor da borda quando desabilitado (opcional)
+              },
+            },}}>
+          <InputLabel 
+            id="demo-simple-select-label">
+              Máquina
+          </InputLabel>
+          <Select
             sx={{
-              color: 'white', 
-              borderColor: 'white', 
-              '&:hover': { 
-                borderColor: 'white', 
-                backgroundColor: 'rgba(255, 255, 255, 0.1)' 
-              }
+              color: 'white', // Cor do texto do Select
+              '& .MuiInputLabel-root': {
+                color: 'white', // Cor do rótulo
+              },
+              '& .MuiSvgIcon-root': {
+                color: 'white', // Cor do ícone (seta)
+              },
             }}
-            variant="outlined" 
-            endIcon={<SearchIcon />}
-            onClick={handleSearch}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={maquina}
+            label="Máquina"
+            onChange={handleChange}
           >
-            Pesquisar
-          </Button>
-        </DemoContainer>
-      </LocalizationProvider>
+            {maquinas.map((maquina) => (
+              <MenuItem key={maquina.id} value={maquina.id}>
+                {maquina.value}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button 
+          sx={{
+            color: 'white', 
+            borderColor: 'white', 
+            '&:hover': { 
+              borderColor: 'white', 
+              backgroundColor: 'rgba(255, 255, 255, 0.1)' 
+            }
+          }}
+          variant="outlined" 
+          endIcon={<SearchIcon />}
+          onClick={handleSearch}
+        >
+          Pesquisar
+        </Button>
+      </DemoContainer>
       <Box sx={{ flexGrow: 1, marginTop:'30px'}} >
         <Grid container spacing={2}>
           <Grid size={{md:2}}>
-            <TotalCountOPs date={startDate} refresh={search} />
+            <TotalCountOPs month={mes} refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
-            <TotalCountParadas date={startDate} refresh={search} />
+            {/* <TotalCountParadas date={} refresh={search} /> */}
           </Grid>
           <Grid size={{md:2}}>
-            <TotalCountManutencao date={startDate} refresh={search} />
+            {/* <TotalCountManutencao date={} refresh={search} /> */}
           </Grid>
           <Grid size={{md:2}}>
-            <TotalCountOPs date={startDate} refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
-            <TotalCountOPs date={startDate} refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
-            <TotalCountOPs date={startDate} refresh={search} />
           </Grid>
         </Grid>
       </Box>
