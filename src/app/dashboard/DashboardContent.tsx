@@ -38,7 +38,7 @@ function DashboardContent() {
 
     if(result.success){
       const data = result.data ?? [];
-      const listaComTodos: SelectFiltroDto[] = [{ id: '0', value: 'TODOS' }, ...data];
+      const listaComTodos: SelectFiltroDto[] = [{ id: '-1', value: 'TODOS' }, ...data];
       setMaquinas(listaComTodos);
       setMaquina(listaComTodos[0].id ?? '');
     }else{
@@ -176,13 +176,13 @@ function DashboardContent() {
       <Box sx={{ flexGrow: 1, marginTop:'30px'}} >
         <Grid container spacing={2}>
           <Grid size={{md:2}}>
-            <TotalCountOPs month={mes} refresh={search} />
+            <TotalCountOPs month={mes} idMaquina={maquina} refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
-            {/* <TotalCountParadas date={} refresh={search} /> */}
+            <TotalCountParadas month={mes} idMaquina={maquina} refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
-            {/* <TotalCountManutencao date={} refresh={search} /> */}
+            <TotalCountManutencao month={mes} idMaquina={maquina} refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
           </Grid>
