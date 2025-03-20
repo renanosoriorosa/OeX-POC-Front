@@ -54,6 +54,24 @@ function MotivoManutencaoContent() {
             onChange={(newValue) => setEndDate(newValue)}
             format="DD/MM/YYYY"
           />
+          <DatePicker 
+            sx={{
+              input: { color: 'white' }, // Texto preto (pode trocar se quiser outra cor)
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'white', // Cor da borda se quiser customizar
+              },
+              '& .MuiSvgIcon-root': {
+                color: 'white', // Ícone branco
+                transition: 'color 0.3s', // Suavizar a transição
+              },
+              '& .MuiFormLabel-root':{
+                color: 'white', // branco
+                transition: 'color 0.3s',
+              },
+            }}
+            value={startDate}
+            label={'Mês e Ano'} 
+            views={['month', 'year']} />
       </DemoContainer>
     </LocalizationProvider>
   </>;

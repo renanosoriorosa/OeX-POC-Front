@@ -199,7 +199,16 @@ function DashboardContent() {
       <Box sx={{ flexGrow: 1, marginTop:'30px'}} >
         <Grid container spacing={2}>
           <Grid size={{md:3}}>
-                <GaugeOEE tipo={TipoGaugeOEE.OEE} refresh={search} />
+            <GaugeOEE tipo={TipoGaugeOEE.OEE} month={mes} idMaquina={maquina} refresh={search} />
+          </Grid>
+          <Grid size={{md:3}}>
+            <GaugeOEE tipo={TipoGaugeOEE.QUALIDADE} month={mes} idMaquina={maquina} refresh={search} />
+          </Grid>
+          <Grid size={{md:3}}>
+            <GaugeOEE tipo={TipoGaugeOEE.DISPONIBILIDADE} month={mes} idMaquina={maquina} refresh={search} />
+          </Grid>
+          <Grid size={{md:3}}>
+            <GaugeOEE tipo={TipoGaugeOEE.PERFORMANCE} month={mes} idMaquina={maquina} refresh={search} />
           </Grid>
         </Grid>
       </Box>

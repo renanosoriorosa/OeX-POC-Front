@@ -5,12 +5,15 @@ import { TipoGaugeOEE } from '@/app/api/Commom/TipoGaugeOee';
 import { Typography } from '@mui/material';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import Grid from '@mui/material/Grid2';
+import OEEService from '@/app/api/OEE/OEEService';
 
 interface GaugeOEE {
   tipo: TipoGaugeOEE;
-  refresh: boolean;
+  refresh: boolean; 
+  month: string;
+  idMaquina: string;
 }
-export default function TotalCountManutencao({ tipo, refresh } : GaugeOEE) {
+export default function GaugeOEE({ tipo, month, idMaquina, refresh } : GaugeOEE) {
   const [valor, setValor] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   
@@ -22,7 +25,33 @@ export default function TotalCountManutencao({ tipo, refresh } : GaugeOEE) {
 
   const HandleRefreshComponent = async () => {
     setLoading(true);
-    setValor(40);
+
+    let result;
+
+    switch (tipo) {
+      case TipoGaugeOEE.OEE:
+        result = await OEEService.GetOEEByMonth(month, idMaquina);
+        break;
+      case TipoGaugeOEE.DISPONIBILIDADE:
+        result = await OEEService.GetDisponibilidadeByMonth(month, idMaquina);
+        break;
+    case TipoGaugeOEE.QUALIDADE:
+        result = await OEEService.GetQualidadeByMonth(month, idMaquina);
+        break;
+      case TipoGaugeOEE.PERFORMANCE:
+        result = await OEEService.GetPerformanceByMonth(month, idMaquina);
+        break;
+      default:
+        console.error("TipoGaugeOEE inválido:", tipo);
+        setLoading(false);
+        return;
+    }
+
+    if(result.success){
+        setValor(result.data ?? 0);
+    }else{
+      console.log(result.messages);
+    }
     setLoading(false);
   }
 
