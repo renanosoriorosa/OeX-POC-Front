@@ -10,6 +10,8 @@ import Grid from '@mui/material/Grid2';
 import TotalCountParadas from '@/components/TotalCountParadas';
 import TotalCountManutencao from '@/components/TotalCountManutencao';
 import CardMTTR from '@/components/CardMTTR';
+import GaugeOEE from '@/components/GaugeOEE';
+import { TipoGaugeOEE } from '../api/Commom/TipoGaugeOee';
 
 function DashboardContent() {
   const [mes, setMes] = React.useState('');
@@ -194,7 +196,13 @@ function DashboardContent() {
           </Grid>
         </Grid>
       </Box>
-      
+      <Box sx={{ flexGrow: 1, marginTop:'30px'}} >
+        <Grid container spacing={2}>
+          <Grid size={{md:3}}>
+                <GaugeOEE tipo={TipoGaugeOEE.OEE} refresh={search} />
+          </Grid>
+        </Grid>
+      </Box>
   </>
   );
 }
