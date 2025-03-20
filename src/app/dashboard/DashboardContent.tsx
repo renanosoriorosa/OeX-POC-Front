@@ -9,6 +9,7 @@ import TotalCountOPs from '@/components/TotalCountOPs';
 import Grid from '@mui/material/Grid2';
 import TotalCountParadas from '@/components/TotalCountParadas';
 import TotalCountManutencao from '@/components/TotalCountManutencao';
+import CardMTTR from '@/components/CardMTTR';
 
 function DashboardContent() {
   const [mes, setMes] = React.useState('');
@@ -185,6 +186,7 @@ function DashboardContent() {
             <TotalCountManutencao month={mes} idMaquina={maquina} refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
+            <CardMTTR month={mes} idMaquina={maquina} refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
           </Grid>
