@@ -5,16 +5,17 @@ import LoaderOverlay from './LoaderOverlay';
 
 interface TotalCountManutencao {
   month: string;
+  year: string;
   idMaquina: string;
   refresh: boolean;
 }
-export default function TotalCountManutencao({ month, idMaquina, refresh } : TotalCountManutencao) {
+export default function TotalCountManutencao({ month, year, idMaquina, refresh } : TotalCountManutencao) {
   const [count, setCount] = React.useState('-');
   const [loading, setLoading] = React.useState(false);
   
   const HandleRefreshComponent = async () => {
     setLoading(true);
-    const result = await ManutencaoService.GetCountByMonth(month, idMaquina);
+    const result = await ManutencaoService.GetCountByMonth(month, year, idMaquina);
 
     if(result.success){
       setCount(result.data?.toString() ?? "-");

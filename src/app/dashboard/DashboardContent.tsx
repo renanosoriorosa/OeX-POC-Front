@@ -12,24 +12,45 @@ import TotalCountManutencao from '@/components/TotalCountManutencao';
 import CardMTTR from '@/components/CardMTTR';
 import GaugeOEE from '@/components/GaugeOEE';
 import { TipoGaugeOEE } from '../api/Commom/TipoGaugeOee';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs, { Dayjs } from 'dayjs';
+import ErrorListForm from '@/components/ErrorListForm';
+
+dayjs.locale('pt-br');
 
 function DashboardContent() {
+  const [mesAno, setMesAno] = React.useState<Dayjs | null>(dayjs());
   const [mes, setMes] = React.useState('');
+  const [ano, setAno] = React.useState('');
   const [maquina, setMaquina] = React.useState('');
   const [search, setSearch] = React.useState(false);
   const [maquinas, setMaquinas] = React.useState<SelectFiltroDto[]>([]);
+  const [messageErrorsCreate, setMessageErrorsCreate] = React.useState<string[]>([]);
 
   const handleSearch = () => {
-    // Atualiza o refreshKey para forçar o TotalCount a recarregar
-    setSearch(true);
-
-    setTimeout(() => {
-      setSearch(false);
-    }, 1000);
+    console.log(mes);
+    console.log(ano);
+    if (
+      mes === '' || 
+      mes == 'Invalid Date' ||
+      ano == 'Invalid Date' ||
+      ano === '' ) {
+      setMessageErrorsCreate(["Informe um mês e ano válido."]);
+    } else {
+      setMessageErrorsCreate([]);
+      setSearch(true);
+      
+      setTimeout(() => {
+        setSearch(false);
+      }, 1000);
+    }
   };
 
-  const handleChangeMes = (event: SelectChangeEvent) => {
-    setMes(event.target.value);
+  const handleChangeMes = (filtro: Dayjs | null) => {
+    setMes(filtro?.format("MM") ?? '');
+    setAno(filtro?.format("YYYY") ?? '');
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -51,13 +72,34 @@ function DashboardContent() {
 
   React.useEffect(() => {
       GetMaquinaList();
-      setMes('1');
+      setMesAno(dayjs());
+      handleChangeMes(dayjs());
   }, []);
 
   return (
     <>
-      <DemoContainer components={['DatePicker']}>
-        <FormControl 
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={['DatePicker']}>
+          <DatePicker 
+            sx={{
+              input: { color: 'white' }, // Texto preto (pode trocar se quiser outra cor)
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'white', // Cor da borda se quiser customizar
+              },
+              '& .MuiSvgIcon-root': {
+                color: 'white', // Ícone branco
+                transition: 'color 0.3s', // Suavizar a transição
+              },
+              '& .MuiFormLabel-root':{
+                color: 'white', // branco
+                transition: 'color 0.3s',
+              },
+            }}
+            value={mesAno}
+            onChange={(newValue) => handleChangeMes(newValue)}
+            label={'Mês e Ano'} 
+            views={['month', 'year']} />
+          <FormControl 
             sx={{ 
               minWidth: 120,
               color: 'white', // Cor do texto do Select
@@ -80,7 +122,7 @@ function DashboardContent() {
               },}}>
             <InputLabel 
               id="demo-simple-select-label">
-                Mês
+                Máquina
             </InputLabel>
             <Select
               sx={{
@@ -94,101 +136,60 @@ function DashboardContent() {
               }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={mes}
-              onChange={handleChangeMes}
-              label="Mês"
+              value={maquina}
+              label="Máquina"
+              onChange={handleChange}
             >
-              <MenuItem key={1} value={1}>Janeiro</MenuItem>
-              <MenuItem key={2} value={2}>Fevereiro</MenuItem>
-              <MenuItem key={3} value={3}>Março</MenuItem>
-              <MenuItem key={4} value={4}>Abril</MenuItem>
-              <MenuItem key={5} value={5}>Maio</MenuItem>
-              <MenuItem key={6} value={6}>Junho</MenuItem>
-              <MenuItem key={7} value={7}>Julho</MenuItem>
-              <MenuItem key={8} value={8}>Agosto</MenuItem>
-              <MenuItem key={9} value={9}>Setembro</MenuItem>
-              <MenuItem key={10} value={10}>Outubro</MenuItem>
-              <MenuItem key={11} value={11}>Novembro</MenuItem>
-              <MenuItem key={12} value={12}>Dezembro</MenuItem>
+              {maquinas.map((maquina) => (
+                <MenuItem key={maquina.id} value={maquina.id}>
+                  {maquina.value}
+                </MenuItem>
+              ))}
             </Select>
-        </FormControl>
-        <FormControl 
-          sx={{ 
-            minWidth: 120,
-            color: 'white', // Cor do texto do Select
-            '& .MuiInputLabel-root': {
-              color: 'white', // Cor do rótulo
-            },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'white', // Cor da borda
-              },
-              '&:hover fieldset': {
-                borderColor: 'white', // Cor da borda no hover
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'white', // Cor da borda quando focado
-              },
-              '&.Mui-disabled fieldset': {
-                borderColor: 'gray', // Cor da borda quando desabilitado (opcional)
-              },
-            },}}>
-          <InputLabel 
-            id="demo-simple-select-label">
-              Máquina
-          </InputLabel>
-          <Select
+          </FormControl>
+          <Button 
             sx={{
-              color: 'white', // Cor do texto do Select
-              '& .MuiInputLabel-root': {
-                color: 'white', // Cor do rótulo
-              },
-              '& .MuiSvgIcon-root': {
-                color: 'white', // Cor do ícone (seta)
-              },
-            }}
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={maquina}
-            label="Máquina"
-            onChange={handleChange}
-          >
-            {maquinas.map((maquina) => (
-              <MenuItem key={maquina.id} value={maquina.id}>
-                {maquina.value}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button 
-          sx={{
-            color: 'white', 
-            borderColor: 'white', 
-            '&:hover': { 
+              color: 'white', 
               borderColor: 'white', 
-              backgroundColor: 'rgba(255, 255, 255, 0.1)' 
-            }
-          }}
-          variant="outlined" 
-          endIcon={<SearchIcon />}
-          onClick={handleSearch}
-        >
-          Pesquisar
-        </Button>
-      </DemoContainer>
+              '&:hover': { 
+                borderColor: 'white', 
+                backgroundColor: 'rgba(255, 255, 255, 0.1)' 
+              }
+            }}
+            variant="outlined" 
+            endIcon={<SearchIcon />}
+            onClick={handleSearch}
+          >
+            Pesquisar
+          </Button>
+        </DemoContainer>
+      </LocalizationProvider>
+      <ErrorListForm errors={messageErrorsCreate} />
       <Box sx={{ flexGrow: 1, marginTop:'30px'}} >
         <Grid container spacing={2}>
           <Grid size={{md:2}}>
-            <TotalCountOPs month={mes} idMaquina={maquina} refresh={search} />
+            <TotalCountOPs month={mes} year={ano} idMaquina={maquina} refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
-            <TotalCountParadas month={mes} idMaquina={maquina} refresh={search} />
+            <TotalCountParadas 
+              month={mes} 
+              year={ano} 
+              idMaquina={maquina} 
+              refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
-            <TotalCountManutencao month={mes} idMaquina={maquina} refresh={search} />
+            <TotalCountManutencao 
+              month={mes} 
+              year={ano} 
+              idMaquina={maquina} 
+              refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
-            <CardMTTR month={mes} idMaquina={maquina} refresh={search} />
+            <CardMTTR 
+              month={mes} 
+              year={ano} 
+              idMaquina={maquina} 
+              refresh={search} />
           </Grid>
           <Grid size={{md:2}}>
           </Grid>
@@ -199,16 +200,36 @@ function DashboardContent() {
       <Box sx={{ flexGrow: 1, marginTop:'30px'}} >
         <Grid container spacing={2}>
           <Grid size={{md:3}}>
-            <GaugeOEE tipo={TipoGaugeOEE.OEE} month={mes} idMaquina={maquina} refresh={search} />
+            <GaugeOEE 
+              tipo={TipoGaugeOEE.OEE} 
+              month={mes} 
+              year={ano} 
+              idMaquina={maquina} 
+              refresh={search} />
           </Grid>
           <Grid size={{md:3}}>
-            <GaugeOEE tipo={TipoGaugeOEE.QUALIDADE} month={mes} idMaquina={maquina} refresh={search} />
+            <GaugeOEE 
+              tipo={TipoGaugeOEE.QUALIDADE} 
+              month={mes} 
+              year={ano}
+              idMaquina={maquina} 
+              refresh={search} />
           </Grid>
           <Grid size={{md:3}}>
-            <GaugeOEE tipo={TipoGaugeOEE.DISPONIBILIDADE} month={mes} idMaquina={maquina} refresh={search} />
+            <GaugeOEE 
+              tipo={TipoGaugeOEE.DISPONIBILIDADE} 
+              month={mes} 
+              year={ano}
+              idMaquina={maquina} 
+              refresh={search} />
           </Grid>
           <Grid size={{md:3}}>
-            <GaugeOEE tipo={TipoGaugeOEE.PERFORMANCE} month={mes} idMaquina={maquina} refresh={search} />
+            <GaugeOEE 
+              tipo={TipoGaugeOEE.PERFORMANCE} 
+              month={mes} 
+              year={ano}
+              idMaquina={maquina} 
+              refresh={search} />
           </Grid>
         </Grid>
       </Box>

@@ -4,16 +4,17 @@ import LoaderOverlay from './LoaderOverlay';
 
 interface TotalCountOPs {
   month: string;
+  year: string;
   idMaquina: string;
   refresh: boolean;
 }
-export default function TotalCountOPs({ month, idMaquina, refresh } : TotalCountOPs) {
+export default function TotalCountOPs({ month, idMaquina, year, refresh } : TotalCountOPs) {
   const [count, setCount] = React.useState('-');
   const [loading, setLoading] = React.useState(false);
 
   const HandleRefreshComponent = async (month : string) => {
     setLoading(true);
-    const result = await OrdemProducaoService.GetCountByMonth(month, idMaquina);
+    const result = await OrdemProducaoService.GetCountByMonth(month, year, idMaquina);
 
     if(result.success){
       setCount(result.data?.toString() ?? "-");

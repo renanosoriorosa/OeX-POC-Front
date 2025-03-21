@@ -11,9 +11,10 @@ interface GaugeOEE {
   tipo: TipoGaugeOEE;
   refresh: boolean; 
   month: string;
+  year: string;
   idMaquina: string;
 }
-export default function GaugeOEE({ tipo, month, idMaquina, refresh } : GaugeOEE) {
+export default function GaugeOEE({ tipo, month, year, idMaquina, refresh } : GaugeOEE) {
   const [valor, setValor] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   
@@ -30,16 +31,16 @@ export default function GaugeOEE({ tipo, month, idMaquina, refresh } : GaugeOEE)
 
     switch (tipo) {
       case TipoGaugeOEE.OEE:
-        result = await OEEService.GetOEEByMonth(month, idMaquina);
+        result = await OEEService.GetOEEByMonth(month, year, idMaquina);
         break;
       case TipoGaugeOEE.DISPONIBILIDADE:
-        result = await OEEService.GetDisponibilidadeByMonth(month, idMaquina);
+        result = await OEEService.GetDisponibilidadeByMonth(month, year, idMaquina);
         break;
     case TipoGaugeOEE.QUALIDADE:
-        result = await OEEService.GetQualidadeByMonth(month, idMaquina);
+        result = await OEEService.GetQualidadeByMonth(month, year, idMaquina);
         break;
       case TipoGaugeOEE.PERFORMANCE:
-        result = await OEEService.GetPerformanceByMonth(month, idMaquina);
+        result = await OEEService.GetPerformanceByMonth(month, year, idMaquina);
         break;
       default:
         console.error("TipoGaugeOEE inválido:", tipo);

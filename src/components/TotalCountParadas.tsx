@@ -5,16 +5,17 @@ import LoaderOverlay from './LoaderOverlay';
 
 interface TotalCountParadas {
   month: string;
+  year: string;
   idMaquina: string;
   refresh: boolean;
 }
-export default function TotalCountParadas({ month, idMaquina, refresh } : TotalCountParadas) {
+export default function TotalCountParadas({ month, year, idMaquina, refresh } : TotalCountParadas) {
   const [count, setCount] = React.useState('-');
   const [loading, setLoading] = React.useState(false);
 
   const HandleRefreshComponent = async () => {
     setLoading(true);
-    const result = await ParadaService.GetCountByMonth(month, idMaquina);
+    const result = await ParadaService.GetCountByMonth(month, year, idMaquina);
 
     if(result.success){
       setCount(result.data?.toString() ?? "-");

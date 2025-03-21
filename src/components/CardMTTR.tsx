@@ -4,16 +4,17 @@ import ManutencaoService from '@/app/api/Manutencao/ManutencaoService';
 
 interface TotalCountOPs {
   month: string;
+  year: string;
   idMaquina: string;
   refresh: boolean;
 }
-export default function CardMTTR({ month, idMaquina, refresh } : TotalCountOPs) {
+export default function CardMTTR({ month, year, idMaquina, refresh } : TotalCountOPs) {
   const [count, setCount] = React.useState('-');
   const [loading, setLoading] = React.useState(false);
 
   const HandleRefreshComponent = async (month : string) => {
     setLoading(true);
-    const result = await ManutencaoService.GetMTTRMonth(month, idMaquina);
+    const result = await ManutencaoService.GetMTTRMonth(month, year, idMaquina);
 
     if(result.success){
       setCount(result.data?.toString() ?? "-");
