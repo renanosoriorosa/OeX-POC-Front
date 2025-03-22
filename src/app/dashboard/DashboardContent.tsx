@@ -17,6 +17,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
 import ErrorListForm from '@/components/ErrorListForm';
+import ChartBarQualidadeProducaoMensal from '@/components/ChartBarQualidadeProducaoMensal';
 
 dayjs.locale('pt-br');
 
@@ -30,8 +31,6 @@ function DashboardContent() {
   const [messageErrorsCreate, setMessageErrorsCreate] = React.useState<string[]>([]);
 
   const handleSearch = () => {
-    console.log(mes);
-    console.log(ano);
     if (
       mes === '' || 
       mes == 'Invalid Date' ||
@@ -75,7 +74,7 @@ function DashboardContent() {
       setMesAno(dayjs());
       handleChangeMes(dayjs());
   }, []);
-
+  
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -230,6 +229,20 @@ function DashboardContent() {
               year={ano}
               idMaquina={maquina} 
               refresh={search} />
+          </Grid>
+        </Grid>
+      </Box>
+      <Box sx={{ flexGrow: 1, marginTop:'30px'}} >
+        <Grid container spacing={2}>
+          <Grid size={{md:6}}>
+            <ChartBarQualidadeProducaoMensal 
+              year={ano}
+              idMaquina={maquina} 
+              refresh={search}
+            />
+          </Grid>
+          <Grid size={{md:6}}>
+              
           </Grid>
         </Grid>
       </Box>
